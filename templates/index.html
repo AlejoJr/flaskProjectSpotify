@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+<html>
+<body>
+{% block content %}
+    <form class="form-signin" role="form" method="post" action="{{ url_for('login') }}">
+        <p align="center"><img class="mb-4" src="/static/logodrama.png" alt="" width="110" height="110"></p>
+        <h1 align="center" class="h3 mb-3 font-weight-normal">Iniciar análisis</h1>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login Spotify</button>
+        <p class="mt-5 mb-3 text-muted">ERS&copy;MITSS - Curso 2020-21</p>
+    </form>
+
+{% endblock %}
+</body>
+</html>

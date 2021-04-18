@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+<html>
+<body>
+
+{% block content %}
+    <br>
+    <br>
+    <h5>Usuario: {{ user }}</h5>
+    <p align="center">Tu puntuación Afinn es</p>
+    <a align="center"><h1>{{ mean }}</h1></a>
+    <a align="center"><h3>Estás: {{ sentiment }}</h3></a>
+    <form class="" role="form" method="post">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Artista</th>
+                <th scope="col">Afinn</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if songs %}
+                {% for song in songs %}
+                    <tr class="table-active">
+                        <td>{{ song[1] }}</td>
+                        <td>{{ song[2] }}</td>
+                        <td>{{ song[4] }}</td>
+                        <td><a class="btn btn-primary" href="{{ url_for('showLyrics', email=user) }}">Letra</a></td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <h1>No hay registros de Canciones</h1>
+            {% endif %}
+            </tbody>
+        </table>
+    </form>
+
+
+{% endblock %}
+
+
+</body>
+</html>

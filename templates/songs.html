@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+<html>
+<body>
+
+{% block content %}
+    <br>
+    <br>
+    <h5>Usuario: {{ user }}</h5>
+    <a align="center"><h1>Tu librería de canciones</h1></a>
+    <form class="" role="form" method="post" action="{{ url_for('show_table_songs_analyze', email=user) }}">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Artista</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if songs %}
+                {% for song in songs %}
+                    <tr class="table-active">
+                        <td>{{ song[1] }}</td>
+                        <td>{{ song[2] }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <h1>No hay registros de Canciones</h1>
+            {% endif %}
+            </tbody>
+        </table>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Analizar sentimiento</button>
+    </form>
+
+
+{% endblock %}
+
+
+</body>
+</html>
