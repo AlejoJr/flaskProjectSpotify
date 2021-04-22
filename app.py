@@ -108,7 +108,7 @@ def show_table_songs():
 @app.route('/songsAnalyze', methods=['POST'])
 def show_table_songs_analyze():
     mail = request.args['email']
-    query_string = "SELECT * FROM songs WHERE email= %s;"
+    query_string = "SELECT * FROM songs WHERE email= %s;"s
     cursor.execute(query_string, (mail,))
     data = cursor.fetchall()
     for song in data:
@@ -118,8 +118,7 @@ def show_table_songs_analyze():
         finalScore = fetchlyrics(nameSong, artist, idSong)
 
         if finalScore != '':
-            query_string = "UPDATE songs SET afinn=%s WHERE name=%s ",
-            "AND artist=%s AND email=%s"
+            query_string = "UPDATE songs SET afinn=%s WHERE name=%s AND artist=%s AND email=%s"
             cursor.execute(query_string, (finalScore, nameSong, artist, mail))
 
     query_string = "SELECT * FROM songs WHERE email= %s AND afinn is not null;"
@@ -152,8 +151,7 @@ def show_table_songs_analyze():
     elif mean > 8:
         sentiment = 'Fenomenal'
 
-    return render_template('afinn.html', songs=data, user=mail, 
-                           mean= mean, sentiment=sentiment)
+    return render_template('afinn.html', songs=data, user=mail,mean= mean, sentiment=sentiment)
 
 #Obtener letra de cancion
 def fetchlyrics(songTitle,artist,idSong):
