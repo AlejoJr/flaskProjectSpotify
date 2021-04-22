@@ -108,7 +108,7 @@ def show_table_songs():
 @app.route('/songsAnalyze', methods=['POST'])
 def show_table_songs_analyze():
     mail = request.args['email']
-    query_string = "SELECT * FROM songs WHERE email= %s;"s
+    query_string = "SELECT * FROM songs WHERE email= %s;"
     cursor.execute(query_string, (mail,))
     data = cursor.fetchall()
     for song in data:
