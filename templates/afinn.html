@@ -25,7 +25,7 @@
                         <td>{{ song[1] }}</td>
                         <td>{{ song[2] }}</td>
                         <td>{{ song[4] }}</td>
-                        <td><a class="btn btn-primary" href="{{ url_for('showLyrics', email=user) }}">Letra</a></td>
+                        <td><a class="btn btn-primary" href="{{ url_for('showLyrics', idSong=song[0], nameSong=song[1], mail=user) }}">Letra</a></td>
                     </tr>
                 {% endfor %}
             {% else %}

@@ -26,6 +26,7 @@ api = MySQL(app)
 app.secret_key = 'SOMETHING-RANDOM'
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
+cursor = db.cursor()
 
 @app.route('/', methods=["GET"])
 def index():
@@ -35,7 +36,6 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     nameMail = request.form['email']
-    cursor = db.cursor()
     cursor.execute('INSERT INTO email (email) VALUES (%s)', (nameMail))
     cursor.connection.commit()
     sp_oauth = create_spotify_oauth()
@@ -63,7 +63,6 @@ def logout():
 
 @app.route('/getTracks')
 def get_all_tracks():
-    cursor = db.cursor()
     cursor.execute("SELECT email FROM email ORDER BY id desc limit 1;")
     mail = cursor.fetchone()
 
@@ -101,7 +100,6 @@ def get_all_tracks():
 @app.route('/tablesongs')
 def show_table_songs():
     mail = request.args['email']
-    cursor = db.cursor()
     query_string = "SELECT * FROM songs WHERE email= %s;"
     cursor.execute(query_string, (mail,))
     data = cursor.fetchall()
@@ -110,14 +108,14 @@ def show_table_songs():
 @app.route('/songsAnalyze', methods=['POST'])
 def show_table_songs_analyze():
     mail = request.args['email']
-    cursor = db.cursor()
     query_string = "SELECT * FROM songs WHERE email= %s;"
     cursor.execute(query_string, (mail,))
     data = cursor.fetchall()
     for song in data:
+        idSong = song[0]
         nameSong = song[1]
         artist = song[2]
-        finalScore = fetchlyrics(nameSong, artist)
+        finalScore = fetchlyrics(nameSong, artist, idSong)
 
         if finalScore != '':
             query_string = "UPDATE songs SET afinn=%s WHERE name=%s AND artist=%s AND email=%s"
@@ -156,12 +154,14 @@ def show_table_songs_analyze():
     return render_template('afinn.html', songs=data, user=mail, mean= mean, sentiment=sentiment)
 
 #Obtener letra de cancion
-def fetchlyrics(songTitle,artist):
+def fetchlyrics(songTitle,artist,idSong):
     url = 'https://api.lyrics.ovh/v1/' + artist + '/' + songTitle
     response = requests.get(url)
     json_data = json.loads(response.content)
     if 'lyrics' in json_data:
         lyrics = json_data['lyrics']
+        query_string = "UPDATE songs SET lyrics=%s WHERE id=%s"
+        cursor.execute(query_string, (lyrics, idSong))
         finalScore = calculateAfinnScore(lyrics)
     else:
         return ''
@@ -186,8 +186,14 @@ def calculateAfinnScore(lyrics):
 
 @app.route('/songsLyrics', methods=['GET', 'POST'])
 def showLyrics():
-
-    return "<h1>SON LOS MEJORES</h1>"
+    idSong = request.args['idSong']
+    nameSong = request.args['nameSong']
+    mail = request.args['mail']
+    query_string = "SELECT lyrics FROM songs WHERE id= %s;"
+    cursor.execute(query_string, (idSong,))
+    data = cursor.fetchone()
+    text = data[0].split('\n')
+    return render_template('showLyrics.html', lyrics=text, nameSong=nameSong, mail=mail)
 
 # Checks to see if token is valid and gets a new token if not
 def get_token():

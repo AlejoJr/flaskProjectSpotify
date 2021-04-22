@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+<html>
+<body>
+
+{% block content %}
+    <br>
+    <br>
+    <h5>Titulo: {{ nameSong }}</h5>
+    <a align="center"><h1>Letra</h1></a>
+    <form class="" role="form" method="post" action="{{ url_for('show_table_songs_analyze', email=mail) }}">
+        {% if lyrics %}
+            {% for line in lyrics %}
+                <p align="center">{{ line }}</p>
+            {% endfor %}
+        {% else %}
+            <h1>No hay letra de cancion</h1>
+        {% endif %}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Volver</button>
+    </form>
+
+
+{% endblock %}
+
+
+</body>
+</html>
